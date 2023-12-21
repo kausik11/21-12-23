@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Favorite Products</title>
+  <style>
+    .favorite {
+      color: red; /* Change this to your preferred style */
+    }
+  </style>
+</head>
+<body>
+
+<!-- Product List -->
+<ul id="productList">
+  <li data-product-id="1">
+    Product 1
+    <button class="favoriteButton">Favorite</button>
+  </li>
+  <li data-product-id="2">
+    Product 2
+    <button class="favoriteButton">Favorite</button>
+  </li>
+  <!-- Add more products as needed -->
+</ul>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // Get the product list and favorite buttons
+    const productList = document.getElementById("productList");
+    const favoriteButtons = document.querySelectorAll(".favoriteButton");
+
+    // Load favorites from local storage
+    const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+    // Update UI based on loaded favorites
+    favorites.forEach(productId => {
+      const productItem = productList.querySelector(`[data-product-id="${productId}"]`);
+      if (productItem) {
+        productItem.classList.add("favorite");
+      }
+    });
+
+    // Add click event listener to each favorite button
+    favoriteButtons.forEach(button => {
+      button.addEventListener("click", function() {
+        const productItem = this.closest("li");
+        const productId = productItem.getAttribute("data-product-id");
+
+        // Toggle favorite status
+        const isFavorite = favorites.includes(productId);
+        if (isFavorite) {
+          favorites.splice(favorites.indexOf(productId), 1);
+        } else {
+          favorites.push(productId);
+        }
+
+        // Update local storage
+        localStorage.setItem("favorites", JSON.stringify(favorites));
+
+        // Update UI
+        productItem.classList.toggle("favorite", !isFavorite);
+      });
+    });
+  });
+</script>
+
+</body>
+</html>
